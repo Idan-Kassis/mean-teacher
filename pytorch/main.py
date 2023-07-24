@@ -221,7 +221,7 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
 
         input_var = torch.autograd.Variable(input)
         ema_input_var = torch.autograd.Variable(ema_input, volatile=True)
-        target_var = torch.autograd.Variable(target.cuda(async=True))
+        target_var = torch.autograd.Variable(target.cuda(non_blocking=True))
 
         minibatch_size = len(target_var)
         labeled_minibatch_size = target_var.data.ne(NO_LABEL).sum()
@@ -323,7 +323,7 @@ def validate(eval_loader, model, log, global_step, epoch):
         meters.update('data_time', time.time() - end)
 
         input_var = torch.autograd.Variable(input, volatile=True)
-        target_var = torch.autograd.Variable(target.cuda(async=True), volatile=True)
+        target_var = torch.autograd.Variable(target.cuda(non_blocking=True), volatile=True)
 
         minibatch_size = len(target_var)
         labeled_minibatch_size = target_var.data.ne(NO_LABEL).sum()

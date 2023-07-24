@@ -276,17 +276,13 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
         assert not (np.isnan(loss.item()) or loss.item() > 1e5), 'Loss explosion: {}'.format(loss.item())
         meters.update('loss', loss.item())
 
-        prec1, prec5 = accuracy(class_logit.data, target_var.data, topk=(1, 5))
+        prec1 = accuracy(class_logit.data, target_var.data)
         meters.update('top1', prec1[0], labeled_minibatch_size)
         meters.update('error1', 100. - prec1[0], labeled_minibatch_size)
-        meters.update('top5', prec5[0], labeled_minibatch_size)
-        meters.update('error5', 100. - prec5[0], labeled_minibatch_size)
 
-        ema_prec1, ema_prec5 = accuracy(ema_logit.data, target_var.data, topk=(1, 5))
+        ema_prec1 = accuracy(ema_logit.data, target_var.data)
         meters.update('ema_top1', ema_prec1[0], labeled_minibatch_size)
         meters.update('ema_error1', 100. - ema_prec1[0], labeled_minibatch_size)
-        meters.update('ema_top5', ema_prec5[0], labeled_minibatch_size)
-        meters.update('ema_error5', 100. - ema_prec5[0], labeled_minibatch_size)
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
@@ -342,12 +338,10 @@ def validate(eval_loader, model, log, global_step, epoch):
         class_loss = class_criterion(output1, target_var) / minibatch_size
 
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(output1.data, target_var.data, topk=(1, 5))
+        prec1 = accuracy(output1.data, target_var.data)
         meters.update('class_loss', class_loss.item(), labeled_minibatch_size)
         meters.update('top1', prec1[0], labeled_minibatch_size)
         meters.update('error1', 100.0 - prec1[0], labeled_minibatch_size)
-        meters.update('top5', prec5[0], labeled_minibatch_size)
-        meters.update('error5', 100.0 - prec5[0], labeled_minibatch_size)
 
         # measure elapsed time
         meters.update('batch_time', time.time() - end)

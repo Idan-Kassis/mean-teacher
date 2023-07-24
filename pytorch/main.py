@@ -302,9 +302,7 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
                 'Data {meters[data_time]:.3f}\t'
                 'Class {meters[class_loss]:.4f}\t'
                 'Cons {meters[cons_loss]:.4f}\t'
-                'Prec@1 {meters[top1]:.3f}\t'
-                'Prec@5 {meters[top5]:.3f}'.format(
-                    epoch, i, len(train_loader), meters=meters))
+                'Prec@1 {meters[top1]:.3f}\t')
             log.record(epoch + i / len(train_loader), {
                 'step': global_step,
                 **meters.values(),
@@ -353,12 +351,10 @@ def validate(eval_loader, model, log, global_step, epoch):
                 'Time {meters[batch_time]:.3f}\t'
                 'Data {meters[data_time]:.3f}\t'
                 'Class {meters[class_loss]:.4f}\t'
-                'Prec@1 {meters[top1]:.3f}\t'
-                'Prec@5 {meters[top5]:.3f}'.format(
-                    i, len(eval_loader), meters=meters))
+                'Prec@1 {meters[top1]:.3f}\t')
 
-    LOG.info(' * Prec@1 {top1.avg:.3f}\tPrec@5 {top5.avg:.3f}'
-          .format(top1=meters['top1'], top5=meters['top5']))
+    LOG.info(' * Prec@1 {top1.avg:.3f}'
+          .format(top1=meters['top1']))
     log.record(epoch, {
         'step': global_step,
         **meters.values(),

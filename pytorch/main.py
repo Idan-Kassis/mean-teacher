@@ -297,10 +297,11 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
 
         if i % args.print_freq == 0:
             LOG.info(
-                f'Epoch: [{0}][{1}/{2}]\t'
+                f'Epoch: [{epoch}][{i}/{len(train_loader)}]\t'
                 f'Class {meters["class_loss"]:.4f}\t'
                 f'Cons {meters["cons_loss"]:.4f}\t'
-                f'Prec@1 {meters["top1"]:.3f}\t')
+                f'Prec@1 {meters["top1"]:.3f}\t'
+            )
             log.record(epoch + i / len(train_loader), {
                 'step': global_step,
                 **meters.values(),

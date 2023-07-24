@@ -20,7 +20,6 @@ from transformers import AutoFeatureExtractor, SwinForImageClassification
 
 @export
 def swin(pretrained=False, **kwargs):
-    assert not pretrained
     model = SwinTransformer()
     return model
 

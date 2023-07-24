@@ -29,6 +29,7 @@ from mean_teacher.data import NO_LABEL
 from mean_teacher.utils import *
 
 
+
 LOG = logging.getLogger('main')
 
 args = None
@@ -38,7 +39,9 @@ global_step = 0
 
 def main(context):
     global global_step
-    global best_prec1
+    global best_prec1	
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
 
     checkpoint_path = context.transient_dir
     training_log = context.create_train_log("training")

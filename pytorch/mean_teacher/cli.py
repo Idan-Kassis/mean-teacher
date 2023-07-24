@@ -28,6 +28,8 @@ def create_parser():
                         help='the subdirectory inside the data directory that contains the training data')
     parser.add_argument('--eval-subdir', type=str, default='val',
                         help='the subdirectory inside the data directory that contains the evaluation data')
+    parser.add_argument('--labeled_path', type=str, default='/workspace/DBT_US_Soroka/semi-supervised_data/labeled_data-384/Train', 
+                        help='String of path for labeled data')
     parser.add_argument('--labels', default=None, type=str, metavar='FILE',
                         help='list of image labels (default: based on directory structure)')
     parser.add_argument('--exclude-unlabeled', default=False, type=str2bool, metavar='BOOL',

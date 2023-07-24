@@ -257,7 +257,7 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
             res_loss = 0
 
         class_loss = class_criterion(class_logit, target_var) / minibatch_size
-        meters.update('class_loss', class_loss.data[0])
+        meters.update('class_loss', class_loss.item())
 
         ema_class_loss = class_criterion(ema_logit, target_var) / minibatch_size
         meters.update('ema_class_loss', ema_class_loss.data[0])

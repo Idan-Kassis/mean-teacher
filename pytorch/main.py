@@ -199,7 +199,9 @@ def update_ema_variables(model, ema_model, alpha, global_step):
 def train(train_loader, model, ema_model, optimizer, epoch, log):
     global global_step
 
-    class_criterion = nn.CrossEntropyLoss(size_average=False, ignore_index=NO_LABEL).cuda()
+    labeled_path = args.labeled_path
+    class_proportion = len(os.listdir(os.path.join(labeled_path,"Negative")))/len(os.listdir(os.path.join(labeled_path,"Positive")))
+    class_criterion = nn.CrossEntropyLoss(weight=torch.tensor([1.0, class_proportion]), size_average=False, ignore_index=NO_LABEL).cuda()
     if args.consistency_type == 'mse':
         consistency_criterion = losses.softmax_mse_loss
     elif args.consistency_type == 'kl':

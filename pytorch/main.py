@@ -225,7 +225,8 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
         meters.update('lr', optimizer.param_groups[0]['lr'])
 
         input_var = torch.autograd.Variable(input)
-        ema_input_var = torch.autograd.Variable(ema_input, volatile=True)
+        with torch.no_grad():
+            ema_input_var = torch.autograd.Variable(ema_input)
         target_var = torch.autograd.Variable(target.cuda(non_blocking=True))
 
         minibatch_size = len(target_var)
@@ -260,7 +261,7 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
         meters.update('class_loss', class_loss.item())
 
         ema_class_loss = class_criterion(ema_logit, target_var) / minibatch_size
-        meters.update('ema_class_loss', ema_class_loss.data[0])
+        meters.update('ema_class_loss', ema_class_loss.item())
 
         if args.consistency:
             consistency_weight = get_current_consistency_weight(epoch)

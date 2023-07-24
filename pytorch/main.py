@@ -182,7 +182,7 @@ def create_data_loaders(train_transformation,
         torchvision.datasets.ImageFolder(evaldir, eval_transformation),
         batch_size=args.batch_size,
         shuffle=False,
-        num_workers=2 * args.workers,  # Needs images twice as fast
+        num_workers=args.workers,  # Needs images twice as fast
         pin_memory=True,
         drop_last=False)
 

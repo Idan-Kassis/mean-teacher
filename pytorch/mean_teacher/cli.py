@@ -19,24 +19,25 @@ __all__ = ['parse_cmd_args', 'parse_dict_args']
 
 def create_parser():
     parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-    parser.add_argument('--dataset', metavar='DATASET', default='imagenet',
+    parser.add_argument("--gpu", type=int, default=None, help="GPU identifier")
+    parser.add_argument('--dataset', metavar='DATASET', default='DBT',
                         choices=datasets.__all__,
                         help='dataset: ' +
                             ' | '.join(datasets.__all__) +
                             ' (default: imagenet)')
     parser.add_argument('--train-subdir', type=str, default='train',
                         help='the subdirectory inside the data directory that contains the training data')
-    parser.add_argument('--eval-subdir', type=str, default='val',
+    parser.add_argument('--eval-subdir', type=str, default='validation',
                         help='the subdirectory inside the data directory that contains the evaluation data')
     parser.add_argument('--labels', default=None, type=str, metavar='FILE',
                         help='list of image labels (default: based on directory structure)')
     parser.add_argument('--exclude-unlabeled', default=False, type=str2bool, metavar='BOOL',
                         help='exclude unlabeled examples from the training set')
-    parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18',
+    parser.add_argument('--arch', '-a', metavar='ARCH', default='swin',
                         choices=architectures.__all__,
                         help='model architecture: ' +
                             ' | '.join(architectures.__all__))
-    parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
+    parser.add_argument('-j', '--workers', default=1, type=int, metavar='N',
                         help='number of data loading workers (default: 4)')
     parser.add_argument('--epochs', default=90, type=int, metavar='N',
                         help='number of total epochs to run')
@@ -67,7 +68,7 @@ def create_parser():
     parser.add_argument('--consistency-type', default="mse", type=str, metavar='TYPE',
                         choices=['mse', 'kl'],
                         help='consistency loss type to use')
-    parser.add_argument('--consistency-rampup', default=30, type=int, metavar='EPOCHS',
+    parser.add_argument('--consistency-rampup', default=2, type=int, metavar='EPOCHS',
                         help='length of the consistency loss ramp-up')
     parser.add_argument('--logit-distance-cost', default=-1, type=float, metavar='WEIGHT',
                         help='let the student model have two outputs and use an MSE loss between the logits with the given weight (default: only have one output)')

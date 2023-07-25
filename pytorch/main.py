@@ -321,8 +321,10 @@ def validate(eval_loader, model, log, global_step, epoch):
     for i, (input, target) in enumerate(eval_loader):
         meters.update('data_time', time.time() - end)
 
-        input_var = torch.autograd.Variable(input, volatile=True)
-        target_var = torch.autograd.Variable(target.cuda(non_blocking=True), volatile=True)
+        with torch.no_grad():
+            input_var = torch.autograd.Variable(input)
+        with torch.no_grad():
+            target_var = torch.autograd.Variable(target.cuda(non_blocking=True))
 
         minibatch_size = len(target_var)
         labeled_minibatch_size = target_var.data.ne(NO_LABEL).sum()
@@ -330,8 +332,8 @@ def validate(eval_loader, model, log, global_step, epoch):
         meters.update('labeled_minibatch_size', labeled_minibatch_size)
 
         # compute output
-        output1, output2 = model(input_var)
-        softmax1, softmax2 = F.softmax(output1, dim=1), F.softmax(output2, dim=1)
+        output1 = model(input_var)
+        softmax1 = F.softmax(output1, dim=1)
         class_loss = class_criterion(output1, target_var) / minibatch_size
 
         # measure accuracy and record loss

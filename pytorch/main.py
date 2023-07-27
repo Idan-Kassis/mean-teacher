@@ -265,6 +265,7 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
 
         if args.consistency:
             consistency_weight = get_current_consistency_weight(epoch)
+            print(consistency_weight)
             meters.update('cons_weight', consistency_weight)
             consistency_loss = consistency_weight * consistency_criterion(cons_logit, ema_logit) / minibatch_size
             meters.update('cons_loss', consistency_loss.item())

@@ -72,7 +72,7 @@ def main(context):
     model = create_model()
     ema_model = create_model(ema=True)
 
-    LOG.info(parameters_string(model))
+    # LOG.info(parameters_string(model))
 
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                 momentum=args.momentum,
@@ -109,8 +109,8 @@ def main(context):
 
         if args.evaluation_epochs and (epoch + 1) % args.evaluation_epochs == 0:
             start_time = time.time()
-            LOG.info("Evaluating the primary model:")
-            prec1 = validate(eval_loader, model, validation_log, global_step, epoch + 1)
+            # LOG.info("Evaluating the primary model:")
+            # prec1 = validate(eval_loader, model, validation_log, global_step, epoch + 1)
             LOG.info("Evaluating the EMA model:")
             ema_prec1 = validate(eval_loader, ema_model, ema_validation_log, global_step, epoch + 1)
             LOG.info("--- validation in %s seconds ---" % (time.time() - start_time))
@@ -193,7 +193,7 @@ def update_ema_variables(model, ema_model, alpha, global_step):
     # Use the true average until the exponential average is more correct
     alpha = min(1 - 1 / (global_step + 1), alpha)
     for ema_param, param in zip(ema_model.parameters(), model.parameters()):
-        ema_param.data.mul_(alpha).add_(1 - alpha, param.data)
+        ema_param.data.mul_(alpha).add(1 - alpha, param.data)
 
 
 def train(train_loader, model, ema_model, optimizer, epoch, log):

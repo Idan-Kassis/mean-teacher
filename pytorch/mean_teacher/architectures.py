@@ -36,10 +36,11 @@ class SwinTransformer(nn.Module):
         self.backbone = SwinForImageClassification.from_pretrained(
             model_name_or_path,
             ignore_mismatched_sizes=True,
-            num_labels=len(labels),
-            id2label={str(i): c for i, c in enumerate(labels)},
-            label2id={c: str(i) for i, c in enumerate(labels)}
+            num_labels=len(labels),  
+            id2label={str(i): label for i, label in enumerate(["Negative", "Positive"])},
+            label2id={"Negative": "0", "Positive": "1"}
         )
+
 
     def forward(self, inputs):
         out = self.backbone(inputs)

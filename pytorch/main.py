@@ -352,8 +352,8 @@ def validate(eval_loader, model, log, global_step, epoch):
                 f'Class {meters["class_loss"]:.4f}\t'
                 f'Prec@1 {meters["top1"]:.3f}\t')
 
-    LOG.info(' * Prec@1 {top1.avg:.3f}'
-          .format(top1=meters['top1']))
+    #LOG.info(' * Prec@1 {top1.avg:.3f}'
+    #      .format(top1=meters['top1']))
     log.record(epoch, {
         'step': global_step,
         **meters.values(),

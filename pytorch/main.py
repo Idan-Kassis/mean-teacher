@@ -5,6 +5,8 @@
 # http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to
 # Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+
+#from clearml import Task
 import re
 import argparse
 import os
@@ -28,7 +30,7 @@ from mean_teacher.run_context import RunContext
 from mean_teacher.data import NO_LABEL
 from mean_teacher.utils import *
 
-
+from transformers import AutoFeatureExtractor
 
 LOG = logging.getLogger('main')
 
@@ -42,6 +44,7 @@ def main(context):
     global best_prec1	
 
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
+   # Task.init(project_name="mean-teacher-git", task_name=args.task)
 
     checkpoint_path = context.transient_dir
     training_log = context.create_train_log("training")
@@ -199,6 +202,8 @@ def update_ema_variables(model, ema_model, alpha, global_step):
 def train(train_loader, model, ema_model, optimizer, epoch, log):
     global global_step
 
+    feature_extractor = AutoFeatureExtractor.from_pretrained("microsoft/swin-base-patch4-window12-384-in22k", return_tensors='pt')
+
     labeled_path = args.labeled_path
     class_proportion = len(os.listdir(os.path.join(labeled_path,"Negative")))/len(os.listdir(os.path.join(labeled_path,"Positive")))
     class_criterion = nn.CrossEntropyLoss(weight=torch.tensor([1.0, class_proportion]), size_average=False, ignore_index=NO_LABEL).cuda()
@@ -313,6 +318,8 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
 def validate(eval_loader, model, log, global_step, epoch):
     class_criterion = nn.CrossEntropyLoss(size_average=False, ignore_index=NO_LABEL).cuda()
     meters = AverageMeterSet()
+
+    feature_extractor = AutoFeatureExtractor.from_pretrained("microsoft/swin-base-patch4-window12-384-in22k", return_tensors='pt')
 
     # switch to evaluate mode
     model.eval()

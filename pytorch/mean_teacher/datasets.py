@@ -33,3 +33,6 @@ def DBT():
         'datadir': '/workspace/DBT_US_Soroka/semi-supervised_data/mt-git-data',
         'num_classes': 2
     }
+
+#transforms.Normalize(**channel_stats)
+

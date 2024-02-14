@@ -25,13 +25,15 @@ def create_parser():
                         help='dataset: ' +
                             ' | '.join(datasets.__all__) +
                             ' (default: imagenet)')
-    parser.add_argument('--train-subdir', type=str, default='train',
+    parser.add_argument('--train-subdir', type=str, default='train_all',
                         help='the subdirectory inside the data directory that contains the training data')
+    parser.add_argument('--task', type=str, default=None,
+                            help='task name for clearml')
     parser.add_argument('--eval-subdir', type=str, default='validation',
                         help='the subdirectory inside the data directory that contains the evaluation data')
     parser.add_argument('--labeled_path', type=str, default='/workspace/DBT_US_Soroka/semi-supervised_data/labeled_data-384/Train', 
                         help='String of path for labeled data')
-    parser.add_argument('--labels', default=None, type=str, metavar='FILE',
+    parser.add_argument('--labels', default='/workspace/DBT_US_Soroka/semi-supervised_data/mt-git-data/labels.txt', type=str, metavar='FILE',
                         help='list of image labels (default: based on directory structure)')
     parser.add_argument('--exclude-unlabeled', default=False, type=str2bool, metavar='BOOL',
                         help='exclude unlabeled examples from the training set')
@@ -45,11 +47,11 @@ def create_parser():
                         help='number of total epochs to run')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='manual epoch number (useful on restarts)')
-    parser.add_argument('-b', '--batch-size', default=256, type=int,
+    parser.add_argument('-b', '--batch-size', default=42, type=int,
                         metavar='N', help='mini-batch size (default: 256)')
     parser.add_argument('--labeled-batch-size', default=None, type=int,
                         metavar='N', help="labeled examples per minibatch (default: no constrain)")
-    parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
+    parser.add_argument('--lr', '--learning-rate', default=0.00001, type=float,
                         metavar='LR', help='max learning rate')
     parser.add_argument('--initial-lr', default=0.0, type=float,
                         metavar='LR', help='initial learning rate when using linear rampup')
@@ -63,14 +65,14 @@ def create_parser():
                         help='use nesterov momentum', metavar='BOOL')
     parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                         metavar='W', help='weight decay (default: 1e-4)')
-    parser.add_argument('--ema-decay', default=0.999, type=float, metavar='ALPHA',
+    parser.add_argument('--ema-decay', default=0.991, type=float, metavar='ALPHA',
                         help='ema variable decay rate (default: 0.999)')
-    parser.add_argument('--consistency', default=None, type=float, metavar='WEIGHT',
+    parser.add_argument('--consistency', default=5, type=float, metavar='WEIGHT',
                         help='use consistency loss with given weight (default: None)')
     parser.add_argument('--consistency-type', default="mse", type=str, metavar='TYPE',
                         choices=['mse', 'kl'],
                         help='consistency loss type to use')
-    parser.add_argument('--consistency-rampup', default=2, type=int, metavar='EPOCHS',
+    parser.add_argument('--consistency-rampup', default=0, type=int, metavar='EPOCHS',
                         help='length of the consistency loss ramp-up')
     parser.add_argument('--logit-distance-cost', default=-1, type=float, metavar='WEIGHT',
                         help='let the student model have two outputs and use an MSE loss between the logits with the given weight (default: only have one output)')
@@ -78,7 +80,7 @@ def create_parser():
                         metavar='EPOCHS', help='checkpoint frequency in epochs, 0 to turn checkpointing off (default: 1)')
     parser.add_argument('--evaluation-epochs', default=1, type=int,
                         metavar='EPOCHS', help='evaluation frequency in epochs, 0 to turn evaluation off (default: 1)')
-    parser.add_argument('--print-freq', '-p', default=10, type=int,
+    parser.add_argument('--print-freq', '-p', default=500, type=int,
                         metavar='N', help='print frequency (default: 10)')
     parser.add_argument('--resume', default='', type=str, metavar='PATH',
                         help='path to latest checkpoint (default: none)')
